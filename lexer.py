@@ -1,25 +1,38 @@
 import re
 
-TOKEN_RULES = [
-    (r'\d+', "NUMBER"),
-    (r'[a-zA-Z_]\w*', "IDENTIFIER"),
-    (r'\+', "PLUS"),
-    (r'=', "EQUAL"),
-    (r'\s+', None),  # Ignore whitespace
-]
+class Token:
+    def __init__(self, type, value):
+        self.type = type
+        self.value = value
 
-def lexer(code):
+    def __repr__(self):
+        return f"Token({self.type}, {self.value})"
+
+def lex(input_string):
     tokens = []
-    while code:
-        for pattern, token_type in TOKEN_RULES:
-            match = re.match(pattern, code)
+    while input_string:
+        match = None
+        for token_type, regex in patterns.items():
+            match = re.match(regex, input_string)
             if match:
-                if token_type:
-                    tokens.append((token_type, match.group(0)))
-                code = code[match.end():]
+                value = match.group(0)
+                tokens.append(Token(token_type, value))
+                input_string = input_string[len(value):]
                 break
-        else:
-            raise SyntaxError(f"Unexpected character: {code[0]}")
+
+        if not match:
+            raise ValueError(f"Invalid syntax: {input_string}")
+
     return tokens
 
-print(lexer("x = 42 + 5"))
+patterns = {
+    "NUMBER": r"\d+",
+    "IDENTIFIER": r"[a-zA-Z_][a-zA-Z0-9_]*",
+    "PLUS": r"\+",
+    "MINUS": r"-",
+    "TIMES": r"\*",
+    "DIVIDE": r"/",
+    "LPAREN": r"\(",
+    "RPAREN": r"\)",
+    "WHITESPACE": r"\s+",
+}
