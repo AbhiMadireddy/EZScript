@@ -35,4 +35,7 @@ patterns = {
     "LPAREN": r"\(",
     "RPAREN": r"\)",
     "WHITESPACE": r"\s+",
+    "IF": r"if", 
+    "LCURLYBRACE": r"\{",
+    "RCURLYBRACE": r"\}",
 }
